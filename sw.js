@@ -1,4 +1,8 @@
-const CACHE='grunnstaerdfraedi-v1';
-const ASSETS=['./','./index.html','./styles.css','./app.js','./manifest.json','./icon-192.png','./icon-512.png'];
-self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS))));
-self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));
+// The combined app imports the existing local data from this same origin.
+// Do not delete CacheStorage belonging to other classroom apps.
+const DESTINATION='https://ingimar90.github.io/Grunnstae/';
+self.addEventListener('install',()=>self.skipWaiting());
+self.addEventListener('activate',event=>event.waitUntil(self.clients.claim()));
+self.addEventListener('fetch',event=>{
+ if(event.request.method==='GET'&&event.request.mode==='navigate')event.respondWith(Promise.resolve(Response.redirect(DESTINATION,302)));
+});
